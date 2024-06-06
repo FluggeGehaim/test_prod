@@ -5,6 +5,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 # Create your models here.
+class Director(models.Model):
+    first_name = models.CharField(max_length=40, default='Не указано')
+    last_name = models.CharField(max_length=40, default='Не указано')
+    email = models.EmailField()
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
 
 class Movie(models.Model):
     EUR = 'EUR'
@@ -23,6 +31,7 @@ class Movie(models.Model):
     budget = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)])
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default=RUB)
     slug = models.SlugField(default='', null=False)
+    director = models.ForeignKey(Director, on_delete=models.PROTECT, null=True, blank=True)
 
     # def save(self, *args, **kwargs):
     #     self.slug = slugify(self.name)
@@ -35,10 +44,3 @@ class Movie(models.Model):
         return f'Фильм:{self.name} -   рейтинг {self.rating}/100,  год выпуска {self.year},  Бюджет {self.budget}'
 
 
-class Director(models.Model):
-    first_name = models.CharField(max_length=40, default='Не указано')
-    last_name = models.CharField(max_length=40, default='Не указано')
-    email = models.EmailField()
-
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
